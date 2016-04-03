@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1459101384 source:/home/alexander/Documents/UBB/Graphs/Practical work 1/directed_graph/main.cpp
+	<algorithm>
+	<cstdio>
+	<iostream>
+	<fstream>
+	<map>
+	<cstring>
+	<unordered_map>
+	<vector>
+
