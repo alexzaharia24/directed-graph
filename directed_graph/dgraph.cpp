@@ -167,7 +167,37 @@ void readEdge(DGraph &g) {
 	g.addEdge(a, b);
 }
 
+
 string chooseFileG() {
+	string cmd;
+
+	cout << "\nChoose file: \n";
+	cout << "1 - graph1k_nocost.txt \n";
+	cout << "2 - graph10k_nocost.txt \n";
+	cout << "3 - graph100k_nocost.txt \n";
+	cout << "4 - graph1m.txt_nocost \n";
+
+	while (1) {
+		cin >> cmd;
+		if (cmd.compare("1") == 0) {
+			return "graph1k_nocost.txt";
+		}
+		else if (cmd.compare("2") == 0) {
+			return "graph10k_nocost.txt";
+		}
+		else if (cmd.compare("3") == 0) {
+			return "graph100k_nocost.txt";
+		}
+		else if (cmd.compare("4") == 0) {
+			return "graph1m_nocost.txt";
+		}
+		else {
+			cout << "Wrong file. \n";
+		}
+	}
+}
+
+string chooseFileGC() {
 	string cmd;
 
 	cout << "\nChoose file: \n";
@@ -196,34 +226,6 @@ string chooseFileG() {
 	}
 }
 
-string chooseFileGC() {
-	string cmd;
-
-	cout << "\nChoose file: \n";
-	cout << "1 - graph1k_nocost.txt \n";
-	cout << "2 - graph10k_nocost.txt \n";
-	cout << "3 - graph100k_nocost.txt \n";
-	cout << "4 - graph1m.txt_nocost \n";
-
-	while (1) {
-		cin >> cmd;
-		if (cmd.compare("1") == 0) {
-			return "graph1k_nocost.txt";
-		}
-		else if (cmd.compare("2") == 0) {
-			return "graph10k_nocost.txt";
-		}
-		else if (cmd.compare("3") == 0) {
-			return "graph100k_nocost.txt";
-		}
-		else if (cmd.compare("4") == 0) {
-			return "graph1m_nocost.txt";
-		}
-		else {
-			cout << "Wrong file. \n";
-		}
-	}
-}
 
 
 int chooseGraph() {
