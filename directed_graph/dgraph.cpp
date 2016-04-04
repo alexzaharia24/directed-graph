@@ -17,7 +17,7 @@ private:
 
 public:
 	/* CONSTRUCTORS */
-	DGraph(int n);
+	DGraph(int n=10);
 	DGraph(const DGraph &g);
 	/* DESTRUCTOR */
 	~DGraph();
@@ -116,7 +116,7 @@ private:
 	map<pair<int, int>, int> costs; //the cost
 public:
 	/*CONSTRUCTORS */
-	DGraphCost(int n);
+	DGraphCost(int n=10);
 	DGraphCost(const DGraphCost& g);
 	~DGraphCost();
 
@@ -197,7 +197,45 @@ string chooseFile() {
 
 }
 
-DGraph initialize() {
+int chooseGraph() {
+	string cmd;
+	while (1) {
+		cout << "Choose the graph type: \n";
+		cout << "[1] Graph without costs. \n";
+		cout << "[2] Graph with costs. \n";
+		cin >> cmd;
+		if (cmd == "1") return 1;
+		else if (cmd == "2") return 2;
+		else {
+			cout << "Wrong graph type. \n";
+			cout << "Enter 1 or 2 \n";
+		}
+	}
+	
+}
+
+DGraph initializeG() {
+	ifstream f;
+	int n, m, i;
+	int a, b;
+	string file;
+
+	file = chooseFile();
+	f.open(file);
+	f >> n;
+	f >> m;
+	cout << "n = " << n << "\n";
+	cout << "m = " << m << "\n";
+	DGraph g = DGraph{ n };
+
+	for (i = 0; i<m; i++) {
+		f >> a >> b;
+		g.addEdge(a, b);
+	}
+	return g;
+}
+
+DGraphCost initializeGC() {
 	ifstream f;
 	int n, m, i;
 	int a, b, c;
@@ -209,22 +247,19 @@ DGraph initialize() {
 	f >> m;
 	cout << "n = " << n << "\n";
 	cout << "m = " << m << "\n";
-
-	DGraph g = DGraph{ n };
+	DGraphCost g = DGraphCost{ n };
 
 	for (i = 0; i<m; i++) {
 		f >> a >> b >> c;
-		g.addEdge(a, b);
+		g.addEdge(a, b, c);
 	}
-
 	return g;
 }
 
-void menuCommands() {
+void menuCommandsG() {
 	cout << "+---------------+ \n";
 	cout << "| Menu commands | \n";
 	cout << "+---------------+ \n";
-	cout << " ini - initialize graph \n";
 	cout << " add - add edge \n";
 	cout << " in  - get in-degree \n";
 	cout << " out - get out-degree \n";
@@ -233,18 +268,26 @@ void menuCommands() {
 	cout << " ise - is edge? \n";
 	cout << " x  - exit \n";
 }
+void menuCommandsGC() {
+	cout << "+---------------+ \n";
+	cout << "| Menu commands | \n";
+	cout << "+---------------+ \n";
+	cout << " add - add edge \n";
+	cout << " in  - get in-degree \n";
+	cout << " out - get out-degree \n";
+	cout << " nov - no. of vertices \n";
+	cout << " noe - no. of edges \n";
+	cout << " ise - is edge? \n";
+	cout << " gco - get the cost of an edge\n";
+	cout << " sco - set the cost of an endge\n";
+	cout << " x  - exit \n";
+}
 
-int executeCommand(string cmd, DGraph &g) {
+int executeCommandG(string cmd, DGraph& g) {
 	if (cmd.compare("x") == 0) {
 		cout << ">> Exit \n";
 		cout << "\n";
 		return 1;
-	}
-	else if (cmd.compare("ini") == 0) {
-		cout << ">> Initialize graph\n";
-		g = initialize();
-		cout << "\n";
-		return 0;
 	}
 	else if (cmd.compare("add") == 0) {
 		cout << ">> Add edge \n";
@@ -305,14 +348,137 @@ int executeCommand(string cmd, DGraph &g) {
 		return 0;
 	}
 }
+int executeCommandGC(string cmd, DGraphCost& g) {
+	if (cmd.compare("x") == 0) {
+		cout << ">> Exit \n";
+		cout << "\n";
+		return 1;
+	}
+	else if (cmd.compare("add") == 0) {
+		cout << ">> Add edge \n";
+		readEdge(g);
+		cout << "\n";
+		return 0;
+	}
+	else if (cmd.compare("in") == 0) {
+		int x;
+		cout << ">> Get in-degree \n";
+		cout << "v = ";
+		cin >> x;
+		cout << "in-degree(" << x << ") = " << g.getInDegree(x);
+		cout << "\n";
+		return 0;
+	}
+	else if (cmd.compare("out") == 0) {
+		int x;
+		cout << ">> Get out-degree \n";
+		cout << "v = ";
+		cin >> x;
+		cout << "out-degree(" << x << ") = " << g.getOutDegree(x);
+		cout << "\n";
+		return 0;
+	}
+	else if (cmd.compare("nov") == 0) {
+		cout << ">> No. of vertices \n";
+		cout << g.getNoOfVertices() << "\n";
+		cout << "\n";
+		return 0;
+	}
+	else if (cmd.compare("noe") == 0) {
+		cout << ">> No. of edges \n";
+		cout << g.getNoOfEdges() << "\n";
+		cout << "\n";
+		return 0;
+	}
+	else if (cmd.compare("ise") == 0) {
+		int v1, v2, ok;
+		cout << ">> Is edge? \n";
+		cout << "v1 = ";
+		cin >> v1;
+		cout << "v2 = ";
+		cin >> v2;
+		ok = g.isEdge(v1, v2);
+		if (ok == 0) {
+			cout << "(" << v1 << ", " << v2 << ") is not an edge. \n";
+		}
+		else {
+			cout << "(" << v1 << ", " << v2 << ") is an edge. \n";
+		}
+		cout << "\n";
+		return 0;
+	}
+	else if (cmd.compare("gco") == 0) {
+		int v1, v2, cost, ise;
+		cout << ">> Get cost \n";
+		cout << "v1 = ";
+		cin >> v1;
+		cout << "v2 = ";
+		cin >> v2;
 
-void mainMenu(DGraph &g) {
+		ise = g.isEdge(v1, v2);
+		
+		if (ise == 0) {
+			cout << "No edge from " << v1 << " to " << v2 << "\n";
+		}
+		else {
+			cost = g.getCost(make_pair(v1, v2));
+			cout << "cost(" << v1 << ", " << v2 << ") = " << cost << "\n";
+		}
+		cout << "\n";
+		return 0;
+	}
+	else if (cmd.compare("sco") == 0) {
+		int v1, v2, cost, ise;
+		cout << ">> Set cost \n";
+		cout << "v1 = ";
+		cin >> v1;
+		cout << "v2 = ";
+		cin >> v2;
+
+		ise = g.isEdge(v1, v2);
+		if (ise == 0) {
+			cout << "No edge from " << v1 << " to " << v2 << "\n";
+		}		
+		else {
+			cout << "cost = ";
+			cin >> cost;
+			g.setCost(make_pair(v1, v2), cost);
+		}
+		cout << "\n";
+		return 0;
+	}
+	else {
+		cout << "> Wrong command. \n";
+		cout << "\n";
+		return 0;
+	}
+}
+
+void mainMenu() {
 	string cmd;
-	menuCommands();
-	do {
-		cout << "Enter command: \n> ";
-		cin >> cmd;
-	} while (!executeCommand(cmd, g));
+	int gtype;
+	DGraph g;
+	DGraphCost gc;
+
+	cout << ">> Initialize graph\n";
+	gtype = chooseGraph();
+	if (gtype == 1) {
+		DGraph g = initializeG();
+		menuCommandsG();
+		do {
+			cout << "Enter command: \n> ";
+			cin >> cmd;
+		} while (!executeCommandG(cmd, g));
+	}
+	else if (gtype == 2) {
+		DGraphCost gc = initializeGC();
+		menuCommandsGC();
+		do {
+			cout << "Enter command: \n> ";
+			cin >> cmd;
+		} while (!executeCommandGC(cmd, gc));
+	}
+	
 }
 
 void run() {
@@ -340,8 +506,8 @@ void run() {
 
 int main()
 {
-	DGraph g{ 0 };
-	mainMenu(g);
+
+	mainMenu();
 
 
 	return 0;
