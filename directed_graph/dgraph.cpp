@@ -7,38 +7,31 @@
 #include <unordered_map>
 #include <vector>
 
-
 using namespace std;
 
+/* ====== DGraph ======*/
 class DGraph {
 private:
-
 	unordered_map<int, vector<int>> inbounds;
 	unordered_map<int, vector<int>> outbounds;
-	map<pair<int, int>, int> costs; //the cost
 
 public:
 	/* CONSTRUCTORS */
 	DGraph(int n);
 	DGraph(const DGraph &g);
-	/* DISTRUCTOR */
+	/* DESTRUCTOR */
 	~DGraph();
 
 	/* GETTERS */
 	int getNoOfVertices();
 	int getNoOfEdges();
-	int getCost(pair<int, int> edge);
 	int getInDegree(int x);
 	int getOutDegree(int x);
 	vector<int> getInbounds(int x);
 	vector<int> getOutbounds(int x);
-	map<pair<int, int>, int> getCosts();
-
-	/* SETTERS */
-	void setCost(pair<int, int> edge, int cost);
 
 	/* ADD */
-	void addEdge(int x, int y, int z);
+	void addEdge(int x, int y);
 	bool isEdge(int x, int y);
 
 	/* ITERATORS */
@@ -50,7 +43,7 @@ public:
 
 };
 
-/* CONSTRUCTORS */
+/* CONSTRUCTORS [DGraph]*/
 DGraph::DGraph(int n) {
 	int i;
 	for (i = 0; i<n; i++) {
@@ -61,22 +54,22 @@ DGraph::DGraph(int n) {
 DGraph::DGraph(const DGraph& g) {
 	this->inbounds = g.inbounds;
 	this->outbounds = g.outbounds;
-	this->costs = g.costs;
 }
 
-/* DESTRUCTOR */
+/* DESTRUCTOR [DGraph]*/
 DGraph::~DGraph() {
 }
 
-/* GETTERS */
+/* GETTERS [DGraph]*/
 int DGraph::getNoOfVertices() {
 	return this->inbounds.size();
 }
 int DGraph::getNoOfEdges() {
-	return this->costs.size();
-}
-int DGraph::getCost(pair<int, int> edge) {
-	return this->costs[edge];
+	int no = 0;
+	for (int i = 0; i < this->getNoOfVertices(); i++) {
+		no += this->inbounds[i].size() + this->outbounds[i].size();
+	}
+	return no / 2;
 }
 int DGraph::getInDegree(int x) {
 	return this->inbounds[x].size();
@@ -88,32 +81,22 @@ vector<int> DGraph::getInbounds(int x) {
 	return this->inbounds[x];
 }
 vector<int> DGraph::getOutbounds(int x) {
-	return this->inbounds[x];
-}
-map<pair<int, int>, int> DGraph::getCosts() {
-	return this->costs;
+	return this->outbounds[x];
 }
 
-
-/* SETTERS */
-void DGraph::setCost(pair<int, int> edge, int cost) {
-	this->costs[edge] = cost;
-}
-
-/* ADD */
-void DGraph::addEdge(int x, int y, int z) {
+/* ADD [DGraph]*/
+void DGraph::addEdge(int x, int y) {
 	this->inbounds[y].push_back(x);
 	this->outbounds[x].push_back(y);
-	this->costs[make_pair(x, y)] = z;
 }
 bool DGraph::isEdge(int x, int y) {
-	if (find(this->inbounds[x].begin(), this->inbounds[x].end(), y) != this->inbounds[x].end()) {
+	if (find(this->inbounds[y].begin(), this->inbounds[y].end(), x) != this->inbounds[y].end()) {
 		return 1;
 	}
 	return 0;
 }
 
-/* ITERATORS */
+/* ITERATORS [DGraph]*/
 vector<int>::iterator DGraph::iteratorInBegin(int x) {
 	return this->inbounds[x].begin();
 }
@@ -127,12 +110,61 @@ vector<int>::iterator DGraph::iteratorOutEnd(int x) {
 	return this->outbounds[x].end();
 }
 
-/* UI */
+/* ====== DGraphCost ======*/
+class DGraphCost : public DGraph {
+private:
+	map<pair<int, int>, int> costs; //the cost
+public:
+	/*CONSTRUCTORS */
+	DGraphCost(int n);
+	DGraphCost(const DGraphCost& g);
+	~DGraphCost();
+
+	/* GETTERS */
+	int getCost(pair<int, int> edge);
+	map<pair<int, int>, int> getCosts();
+
+	/* SETTERS */
+	void setCost(pair<int, int> edge, int cost);
+
+	/* OPERATIONS */
+	void addEdge(int x, int y, int z);
+};
+
+/* CONSTRUCTORS [DGraphCost] */
+DGraphCost::DGraphCost(int n): DGraph(n) {
+}
+DGraphCost::DGraphCost(const DGraphCost& g) : DGraph(g) {
+	this->costs = g.costs;
+}
+/* DESTRUCTOR [DGraphCost] */
+DGraphCost::~DGraphCost() {}
+
+/* GETTERS */
+int DGraphCost::getCost(pair<int, int> edge) {
+	return this->costs[edge];
+}
+map<pair<int, int>, int> DGraphCost::getCosts() {
+	return this->costs;
+}
+
+/* SETTERS [DGraphCost] */
+void DGraphCost::setCost(pair<int, int> edge, int cost) {
+	this->costs[edge] = cost;
+}
+
+/* OPERATIONS [DGraphCost] */
+void DGraphCost::addEdge(int x, int y, int z) {
+	DGraph::addEdge(x, y);
+	this->costs[make_pair(x, y)] = z;
+}
+
+/* ------- UI -------- */
 void readEdge(DGraph &g) {
 	int a, b, c;
 	cout << "v-v-c \n";
 	cin >> a >> b >> c;
-	g.addEdge(a, b, c);
+	g.addEdge(a, b);
 }
 
 string chooseFile() {
@@ -182,7 +214,7 @@ DGraph initialize() {
 
 	for (i = 0; i<m; i++) {
 		f >> a >> b >> c;
-		g.addEdge(a, b, c);
+		g.addEdge(a, b);
 	}
 
 	return g;
