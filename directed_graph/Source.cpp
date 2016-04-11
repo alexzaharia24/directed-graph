@@ -60,13 +60,13 @@ public:
 			Input: x (int) - the vertix we get the outbound degree for
 			Output: (int) - the outbound degree of 'x' */
 	vector<int> getInbounds(int x);
-	/*	Gets the list of inbound edges of x.
-			Input: x (int) - the vertix we get the inbound edges list for
-			Output: (vector<int>) - the inbound list of edges for 'x' */
+	/*	Gets the list of predecesors of x.
+			Input: x (int) - the vertix we get the predecesor list for
+			Output: (vector<int>) - the predecesor list of edges for 'x' */
 	vector<int> getOutbounds(int x);
-	/*	Gets the list of outbound edges of x.
-			Input: x (int) - the vertix we get the outbound edges list for
-			Output: (vector<int>) - the outbound list of edges for 'x' */
+	/*	Gets the list of succesors of x.
+			Input: x (int) - the vertix we get the succesor list for
+			Output: (vector<int>) - the succesor list  of edges for 'x' */
 
 	/* ADD */
 	void addEdge(int x, int y);
