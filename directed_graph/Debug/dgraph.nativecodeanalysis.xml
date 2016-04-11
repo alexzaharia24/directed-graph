@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>f:\coding\college\graphs\directed_graph\directed_graph\</FILEPATH>
+      <FILENAME>dgraph.cpp</FILENAME>
+      <LINE>838</LINE>
+      <COLUMN>9</COLUMN>
+    </SFA>
+    <DEFECTCODE>6246</DEFECTCODE>
+    <DESCRIPTION>Local declaration of 'g' hides declaration of the same name in outer scope. For additional information, see previous declaration at line '832' of 'f:\coding\college\graphs\directed_graph\directed_graph\dgraph.cpp'.</DESCRIPTION>
+    <FUNCTION>mainMenu</FUNCTION>
+    <DECORATED>?mainMenu@@YAXXZ</DECORATED>
+    <FUNCLINE>829</FUNCLINE>
+    <PATH>
+      <SFA>
+        <FILEPATH>f:\coding\college\graphs\directed_graph\directed_graph\</FILEPATH>
+        <FILENAME>dgraph.cpp</FILENAME>
+        <LINE>832</LINE>
+        <COLUMN>9</COLUMN>
+      </SFA>
+    </PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>f:\coding\college\graphs\directed_graph\directed_graph\</FILEPATH>
+      <FILENAME>dgraph.cpp</FILENAME>
+      <LINE>846</LINE>
+      <COLUMN>13</COLUMN>
+    </SFA>
+    <DEFECTCODE>6246</DEFECTCODE>
+    <DESCRIPTION>Local declaration of 'gc' hides declaration of the same name in outer scope. For additional information, see previous declaration at line '833' of 'f:\coding\college\graphs\directed_graph\directed_graph\dgraph.cpp'.</DESCRIPTION>
+    <FUNCTION>mainMenu</FUNCTION>
+    <DECORATED>?mainMenu@@YAXXZ</DECORATED>
+    <FUNCLINE>829</FUNCLINE>
+    <PATH>
+      <SFA>
+        <FILEPATH>f:\coding\college\graphs\directed_graph\directed_graph\</FILEPATH>
+        <FILENAME>dgraph.cpp</FILENAME>
+        <LINE>833</LINE>
+        <COLUMN>14</COLUMN>
+      </SFA>
+    </PATH>
+  </DEFECT>
+</DEFECTS>
