@@ -224,15 +224,22 @@ void DGraphCost::addEdge(int x, int y, int z) {
 }
 
 /* ------- UI -------- */
-void readEdge(DGraph &g) {
+void readEdgeG(DGraph &g) {
 	/*	Read an edge from the user and add it to the graph. 
 			Input: g (DGraph&) - the graph we will add the edge to. */
+	int a, b;
+	cout << "v-v \n";
+	cin >> a >> b;
+	g.addEdge(a, b);
+}
+void readEdgeGC(DGraph &g) {
+	/*	Read an edge from the user and add it to the graph.
+	Input: g (DGraph&) - the graph we will add the edge to. */
 	int a, b, c;
 	cout << "v-v-c \n";
 	cin >> a >> b >> c;
 	g.addEdge(a, b);
 }
-
 
 string chooseFileG() {
 	/*	Choose a file to initialize the costless graph. 
@@ -406,7 +413,7 @@ int executeCommandG(string cmd, DGraph& g) {
 	}
 	else if (cmd.compare("add") == 0) {
 		cout << ">> Add edge \n";
-		readEdge(g);
+		readEdgeG(g);
 		cout << "\n";
 		return 0;
 	}
@@ -476,7 +483,7 @@ int executeCommandGC(string cmd, DGraphCost& g) {
 	}
 	else if (cmd.compare("add") == 0) {
 		cout << ">> Add edge \n";
-		readEdge(g);
+		readEdgeGC(g);
 		cout << "\n";
 		return 0;
 	}
