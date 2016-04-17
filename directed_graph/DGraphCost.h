@@ -34,7 +34,7 @@ public:
 	cost (int) - the new cost of the edge. */
 
 	/* OPERATIONS */
-	void addEdge(int x, int y, int z);
+	int addEdge(int x, int y, int z);
 	/*	Add an edge between 'x' and 'y' with the cost 'z'.
 	Input:	x (int) - the start vertix
 	y (int) - the end vertix

@@ -2,14 +2,82 @@
 #include <cstdio>
 #include <iostream>
 #include <fstream>
-#include <map>
 #include <string>
-#include <unordered_map>
-#include <vector>
 
 #include "DGraphCost.h"
 
 using namespace std;
+
+string file;
+
+DGraph readFromFileG(string fname) {
+	/*	Read a costless graph from a text file. 
+			Input: fname (string)  - the file to read from
+			Output: g (DGraph) - directed graph with no costs. */
+	int n, m, i, a, b;
+	ifstream f;
+	f.open(fname);
+	f >> n;
+	f >> m;
+
+	DGraph g = DGraph{ n };
+
+	for (i = 0; i<m; i++) {
+		f >> a >> b;
+		g.addEdge(a, b);
+	}
+	return g;
+}
+
+DGraphCost readFromFileGC(string fname) {
+	/*	Read a cost graph from a text file.
+			Input: fname (string)  - the file to read from
+			Output: g (DGraphCost) - directed graph with costs. */
+	int n, m, i, a, b, c;
+	ifstream f;
+	f.open(fname);
+	f >> n;
+	f >> m;
+	DGraphCost g{ n };
+
+	for (i = 0; i<m; i++) {
+		f >> a >> b >> c;
+		g.addEdge(a, b, c);
+	}
+	return g;
+}
+
+void writeToFileG(string fname, DGraph g) {
+	/*	Write a costless graph to a text file. 
+			Input:  fname (string) - the file to write to
+					g (DGraph) - the costless graph to write. */
+	ofstream f;
+	int n = g.getNoOfVertices(), m = g.getNoOfEdges();
+	f.open(fname);
+	f << n << " " << m << endl;
+	for (int i = 0; i < n; i++) {
+		vector<int> outbounds = g.getOutbounds(i);
+		for (unsigned j = 0; j < outbounds.size(); ++j) {
+			f << i << " " << outbounds[j] << endl;
+		}
+	}
+}
+
+void writeToFileGC(string fname, DGraphCost g) {
+	/*	Write a costless graph to a text file.
+			Input:  fname (string) - the file to write to
+					g (DGraphCost) - the cost graph to write. */
+	ofstream f;
+	int n = g.getNoOfVertices(), m = g.getNoOfEdges();
+	f.open(fname);
+	f << n << " " << m << endl;
+	for (int i = 0; i < n; i++) {
+		vector<int> outbounds = g.getOutbounds(i);
+		for (unsigned j = 0; j < outbounds.size(); ++j) {
+			f << i << " " << outbounds[j] << " " << g.getCost(std::make_pair(i, outbounds[j])) << endl;
+		}
+	}
+}
 
 /* ------- UI -------- */
 void readEdgeG(DGraph &g) {
@@ -18,15 +86,26 @@ void readEdgeG(DGraph &g) {
 	int a, b;
 	cout << "v-v \n";
 	cin >> a >> b;
-	g.addEdge(a, b);
+	if (g.addEdge(a, b) == -1) {
+		cout << "(" << a << "," << b << ") already in the graph. \n";
+	}
 }
-void readEdgeGC(DGraph &g) {
+void readEdgeGC(DGraphCost &g) {
 	/*	Read an edge from the user and add it to the graph.
-	Input: g (DGraph&) - the graph we will add the edge to. */
-	int a, b, c;
+			Input: g (DGraph&) - the graph we will add the edge to. */
+	int a, b, c, rcode;
 	cout << "v-v-c \n";
 	cin >> a >> b >> c;
-	g.addEdge(a, b);
+	rcode = g.addEdge(a, b, c);
+	if (rcode == -1) {
+		cout << "(" << a << "," << b << ") already in the graph. \n";
+	}
+	else if (rcode == 1) {
+		cout << "Added with success. \n";
+	}
+	else {
+		cout << "Vertices not in range. \n";
+	}
 }
 
 string chooseFileG() {
@@ -115,46 +194,23 @@ DGraph initializeG() {
 	/*	Initialize the costless graph. 
 			Output: (DGraph) - the initialized graph. */
 	ifstream f;
-	int n, m, i;
-	int a, b;
-	string file;
+	string fname;
+	fname = chooseFileG();
+	file = fname; //global file name
 
-	file = chooseFileG();
-	f.open(file);
-	f >> n;
-	f >> m;
-	cout << "n = " << n << "\n";
-	cout << "m = " << m << "\n";
-	DGraph g = DGraph{ n };
-
-	for (i = 0; i<m; i++) {
-		f >> a >> b;
-		g.addEdge(a, b);
-	}
-	return g;
+	return readFromFileG(fname);
 }
 
 DGraphCost initializeGC() {
 	/*	Initialize the cost graph.
 			Output: (DGraph) - the initialized graph. */
 	ifstream f;
-	int n, m, i;
-	int a, b, c;
-	string file;
+	string fname;
+	fname = chooseFileGC();
 
-	file = chooseFileGC();
-	f.open(file);
-	f >> n;
-	f >> m;
-	cout << "n = " << n << "\n";
-	cout << "m = " << m << "\n";
-	DGraphCost g = DGraphCost{ n };
+	file = fname; //global file name
 
-	for (i = 0; i<m; i++) {
-		f >> a >> b >> c;
-		g.addEdge(a, b, c);
-	}
-	return g;
+	return readFromFileGC(fname);
 }
 
 void menuCommandsG() {
@@ -168,6 +224,7 @@ void menuCommandsG() {
 	cout << " nov - no. of vertices \n";
 	cout << " noe - no. of edges \n";
 	cout << " ise - is edge? \n";
+	cout << " save - save to file \n";
 	cout << " x  - exit \n";
 }
 void menuCommandsGC() {
@@ -183,6 +240,7 @@ void menuCommandsGC() {
 	cout << " ise - is edge? \n";
 	cout << " gco - get the cost of an edge\n";
 	cout << " sco - set the cost of an endge\n";
+	cout << " save - save to file \n";
 	cout << " x  - exit \n";
 }
 
@@ -248,6 +306,10 @@ int executeCommandG(string cmd, DGraph& g) {
 			cout << "(" << v1 << ", " << v2 << ") is an edge. \n";
 		}
 		cout << "\n";
+		return 0;
+	}
+	else if (cmd.compare("save") == 0) {
+		writeToFileG(file, g);
 		return 0;
 	}
 	else {
@@ -360,6 +422,10 @@ int executeCommandGC(string cmd, DGraphCost& g) {
 		cout << "\n";
 		return 0;
 	}
+	else if (cmd.compare("save") == 0) {
+		writeToFileGC(file, g);
+		return 0;
+	}
 	else {
 		cout << "> Wrong command. \n";
 		cout << "\n";
@@ -380,17 +446,19 @@ void mainMenu() {
 		DGraph g = initializeG();
 		menuCommandsG();
 		do {
-			cout << "Enter command: \n> ";
+			cout << "\nEnter command: \n> ";
 			cin >> cmd;
 		} while (!executeCommandG(cmd, g));
+		writeToFileG(file, g);
 	}
 	else if (gtype == 2) {
 		DGraphCost gc = initializeGC();
 		menuCommandsGC();
 		do {
-			cout << "Enter command: \n> ";
+			cout << "\nEnter command: \n> ";
 			cin >> cmd;
 		} while (!executeCommandGC(cmd, gc));
+		writeToFileGC(file, gc);
 	}
 
 }
@@ -398,6 +466,7 @@ void mainMenu() {
 int main()
 {
 	mainMenu();
+
 
 	return 0;
 }

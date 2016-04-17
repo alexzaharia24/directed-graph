@@ -45,7 +45,7 @@ public:
 			Output: (vector<int>) - the outbound list of edges for 'x' */
 
 	/* ADD */
-	void addEdge(int x, int y);
+	int addEdge(int x, int y);
 	/*	Add an edge between two vertixes.
 			Input:	x (int) - the start vertix 
 					y (int) - the end vertix */
@@ -78,4 +78,6 @@ public:
 			Output: (vector<int>::iterator) - iterator to the end
 											of the outbound list of 'x' */
 
+	/* OPERATORS */
+	
 };

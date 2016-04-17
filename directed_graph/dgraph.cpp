@@ -41,9 +41,16 @@ std::vector<int> DGraph::getOutbounds(int x) {
 }
 
 /* ADD [DGraph] */
-void DGraph::addEdge(int x, int y) {
+int DGraph::addEdge(int x, int y) {
+	if (x > this->getNoOfVertices() || y > this->getNoOfVertices()) {
+		return 0;
+	}
+	else if (isEdge(x, y)) {
+		return -1;
+	}
 	this->inbounds[y].push_back(x);
 	this->outbounds[x].push_back(y);
+	return 1;
 }
 bool DGraph::isEdge(int x, int y) {
 	if (find(this->inbounds[y].begin(), this->inbounds[y].end(), x) != this->inbounds[y].end()) {
