@@ -460,13 +460,10 @@ void mainMenu() {
 		} while (!executeCommandGC(cmd, gc));
 		writeToFileGC(file, gc);
 	}
-
 }
 
 int main()
 {
 	mainMenu();
-
-
 	return 0;
 }

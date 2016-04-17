@@ -48,7 +48,10 @@ public:
 	int addEdge(int x, int y);
 	/*	Add an edge between two vertixes.
 			Input:	x (int) - the start vertix 
-					y (int) - the end vertix */
+					y (int) - the end vertix 
+			Output: -1 - if the edge already exists
+					0  - for successful add
+					1  - if the vertices out of range. */
 	bool isEdge(int x, int y);
 	/*	Verify if there exists an edge between 'x' and 'y' 
 			Input:	x (int) - the start vertix 
@@ -77,7 +80,4 @@ public:
 			Input: x (int) - the vertix we work with
 			Output: (vector<int>::iterator) - iterator to the end
 											of the outbound list of 'x' */
-
-	/* OPERATORS */
-	
 };

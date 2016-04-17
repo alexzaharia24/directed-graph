@@ -24,7 +24,6 @@ void DGraphCost::setCost(std::pair<int, int> edge, int cost) {
 
 /* OPERATIONS [DGraphCost] */
 int DGraphCost::addEdge(int x, int y, int z) {
-	// (!) Add duplicate proof
 	int rcode = DGraph::addEdge(x, y);
 	if (rcode == 1) {
 		this->costs[std::make_pair(x, y)] = z;
